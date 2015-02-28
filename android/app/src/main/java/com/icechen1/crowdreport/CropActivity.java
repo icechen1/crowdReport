@@ -20,8 +20,11 @@ public class CropActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             Bitmap bm = ((Bitmap)extras.getBundle("picture").get("data"));
-            if(bm != null)
+            if(bm != null){
+                cropImageView.setFixedAspectRatio(false);
                 cropImageView.setImageBitmap(bm);
+            }
+
         }
 
     }
