@@ -7,7 +7,7 @@
     tools:context=".MapsActivity"
     android:name="com.google.android.gms.maps.SupportMapFragment">
     <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/submit_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

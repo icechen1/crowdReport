@@ -1,6 +1,7 @@
 package com.icechen1.crowdreport;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,8 +19,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.melnykov.fab.FloatingActionButton;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class MapFragment extends Fragment {
+    @OnClick(R.id.submit_fab)
+    public void submit_launch(View view) {
+        Intent intent = new Intent(getActivity(), SubmitActivity.class);
+        getActivity().startActivity(intent);
+    }
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -46,6 +57,7 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+        ButterKnife.inject(this, rootView);
         setUpMapIfNeeded();
         return rootView;
     }
