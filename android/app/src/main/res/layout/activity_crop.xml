@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.icechen1.crowdreport.CropActivity">
@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        crop:imageResource="@drawable/ic_action_image_photo_camera"
+        crop:imageResource="@mipmap/ic_launcher"
         />
 
-</RelativeLayout>
+</FrameLayout>

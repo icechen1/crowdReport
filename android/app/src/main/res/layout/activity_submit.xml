@@ -35,15 +35,25 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:padding="10dp">
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Reporting to Urbana"
+                    android:id="@+id/org"
+                    android:typeface="sans"
+                    android:textStyle="bold"
+                    android:paddingTop="10dp"
+                    android:layout_alignParentTop="true" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_action_communication_location_on"
                     android:id="@+id/imageView2"
-                    android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/org"
+                     />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -60,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/change_loc"
-                    android:id="@+id/textView"
+                    android:id="@+id/location_change"
                     android:typeface="sans"
                     android:textStyle="bold"
                     android:paddingTop="10dp"
