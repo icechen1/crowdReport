@@ -44,16 +44,16 @@ public class Issue {
     /**
      * Indicates if the item is marked as completed
      */
-    //public int getStatus() {
-       // return status;
-   // }
+    public int getStatus() {
+        return status;
+    }
 
     /**
      * Marks the item as completed or incompleted
      */
-   // public void setStatus(int s) {
-     //   status = s;
-    //}
+    public void setStatus(int s) {
+        status = s;
+    }
     /**
      * Indicates if the item is marked as completed
      */

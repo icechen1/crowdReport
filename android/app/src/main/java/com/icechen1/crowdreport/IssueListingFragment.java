@@ -3,6 +3,7 @@ package com.icechen1.crowdreport;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.icechen1.crowdreport.dummy.DummyContent;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 
 import java.util.ArrayList;
+
+import butterknife.InjectView;
 
 /**
  * A fragment representing a list of Items.
@@ -138,6 +141,7 @@ public class IssueListingFragment extends Fragment implements AbsListView.OnItem
             detailAct.putExtra("description",((Issue)mAdapter.getItem(position)).getDescription());
             detailAct.putExtra("picture",((Issue)mAdapter.getItem(position)).getPicture());
             detailAct.putExtra("category",((Issue)mAdapter.getItem(position)).getCategory());
+            detailAct.putExtra("status",((Issue)mAdapter.getItem(position)).getStatus());
 
             getActivity().startActivity(detailAct);
     }
@@ -185,9 +189,24 @@ public class IssueListingFragment extends Fragment implements AbsListView.OnItem
             // Lookup view for data population
             TextView tvCat = (TextView) convertView.findViewById(R.id.category);
             TextView tvLoc = (TextView) convertView.findViewById(R.id.location);
+            TextView tvStatus = (TextView) convertView.findViewById(R.id.status);
             // Populate the data into the template view using the data object
             tvCat.setText(issue.getCategory());
             tvLoc.setText(issue.getLat() + " " + issue.getLon());
+            int submit_status = issue.getStatus();
+            if(submit_status == 0){
+                tvStatus.setText("Pending");
+                tvStatus.setTextColor(Color.DKGRAY);
+            }
+
+            if(submit_status == 1){
+                tvStatus.setText("Rejected");
+                tvStatus.setTextColor(Color.RED);
+            }
+            if(submit_status == 2){
+                tvStatus.setText("Acknowledged");
+                tvStatus.setTextColor(Color.parseColor("#8BC34A"));
+            }
             // Return the completed view to render on screen
             return convertView;
         }

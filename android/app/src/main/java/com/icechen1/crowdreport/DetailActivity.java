@@ -1,6 +1,7 @@
 package com.icechen1.crowdreport;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -29,6 +30,8 @@ public class DetailActivity extends ActionBarActivity {
     TextView location;
     @InjectView(R.id.description)
     TextView description;
+    @InjectView(R.id.status)
+    TextView status;
     @InjectView(R.id.picture)
     ImageView picture;
     @Override
@@ -64,6 +67,20 @@ public class DetailActivity extends ActionBarActivity {
                 ImageLoader.getInstance().displayImage(extras.getString("picture"), picture);
             if(extras.getString("category") != null)
                 category.setText(extras.getString("category"));
+            int submit_status = extras.getInt("status");
+            if(submit_status == 0){
+                status.setText("Pending");
+                status.setTextColor(Color.DKGRAY);
+            }
+
+            if(submit_status == 1){
+                status.setText("Rejected");
+                status.setTextColor(Color.RED);
+            }
+            if(submit_status == 2){
+                status.setText("Acknowledged");
+                status.setTextColor(Color.parseColor("#8BC34A"));
+            }
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
