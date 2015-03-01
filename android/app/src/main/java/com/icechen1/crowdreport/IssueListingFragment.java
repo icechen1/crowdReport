@@ -1,8 +1,11 @@
 package com.icechen1.crowdreport;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,11 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 
+import com.icechen1.crowdreport.data.Issue;
 import com.icechen1.crowdreport.dummy.DummyContent;
+import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -28,11 +35,11 @@ public class IssueListingFragment extends Fragment implements AbsListView.OnItem
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM1 = "IS_ONLY_USER";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private boolean mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
@@ -49,10 +56,10 @@ public class IssueListingFragment extends Fragment implements AbsListView.OnItem
     private ListAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static IssueListingFragment newInstance(String param1, String param2) {
+    public static IssueListingFragment newInstance(boolean only_user, String param2) {
         IssueListingFragment fragment = new IssueListingFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putBoolean(ARG_PARAM1, only_user);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -70,13 +77,22 @@ public class IssueListingFragment extends Fragment implements AbsListView.OnItem
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getBoolean(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        if(mParam1){
+            ArrayList<Issue> filtered = new ArrayList<>();
+            for(Issue i: CrowdReportApplication.mList){
+                Log.d("a", String.valueOf(filtered.size()));
+                if(i.getUserId() != null)
+                    if(i.getUserId().equals(CrowdReportApplication.getInstance().mClient.getCurrentUser().getUserId())) filtered.add(i);
+            }
+            Log.d("a", String.valueOf(filtered.size()));
+            mAdapter = new IssueAdapter(getActivity(), filtered);
+        }else{
+            mAdapter = new IssueAdapter(getActivity(), CrowdReportApplication.mList);
+        }
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
     }
 
     @Override
@@ -100,8 +116,7 @@ public class IssueListingFragment extends Fragment implements AbsListView.OnItem
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+
         }
     }
 
@@ -114,11 +129,17 @@ public class IssueListingFragment extends Fragment implements AbsListView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
+
+            Intent detailAct = new Intent(getActivity(),DetailActivity.class);
+
+            //detailAct.putExtra("time", ((Issue)mAdapter.getItem(position)).getTime());
+            detailAct.putExtra("lat", ((Issue)mAdapter.getItem(position)).getLat());
+            detailAct.putExtra("lon", ((Issue)mAdapter.getItem(position)).getLon());
+            detailAct.putExtra("description",((Issue)mAdapter.getItem(position)).getDescription());
+            detailAct.putExtra("picture",((Issue)mAdapter.getItem(position)).getPicture());
+            detailAct.putExtra("category",((Issue)mAdapter.getItem(position)).getCategory());
+
+            getActivity().startActivity(detailAct);
     }
 
     /**
@@ -148,5 +169,27 @@ public class IssueListingFragment extends Fragment implements AbsListView.OnItem
         // TODO: Update argument type and name
         public void onFragmentInteraction(String id);
     }
+    public class IssueAdapter extends ArrayAdapter<Issue> {
+        public IssueAdapter(Context context, ArrayList<Issue> users) {
+            super(context, 0, users);
+        }
 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // Get the data item for this position
+            Issue issue = getItem(position);
+            // Check if an existing view is being reused, otherwise inflate the view
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_issue, parent, false);
+            }
+            // Lookup view for data population
+            TextView tvCat = (TextView) convertView.findViewById(R.id.category);
+            TextView tvLoc = (TextView) convertView.findViewById(R.id.location);
+            // Populate the data into the template view using the data object
+            tvCat.setText(issue.getCategory());
+            tvLoc.setText(issue.getLat() + " " + issue.getLon());
+            // Return the completed view to render on screen
+            return convertView;
+        }
+    }
 }

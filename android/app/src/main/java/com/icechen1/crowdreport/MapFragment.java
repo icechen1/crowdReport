@@ -18,7 +18,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.icechen1.crowdreport.data.Issue;
 import com.melnykov.fab.FloatingActionButton;
 
 import butterknife.ButterKnife;
@@ -26,6 +28,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class MapFragment extends Fragment {
+    static MapFragment instance = null;
     @OnClick(R.id.submit_fab)
     public void submit_launch(View view) {
         Intent intent = new Intent(getActivity(), SubmitActivity.class);
@@ -42,12 +45,11 @@ public class MapFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static MapFragment newInstance(int sectionNumber) {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
-        return fragment;
+    public static MapFragment newInstance() {
+        if(instance == null){
+            instance = new MapFragment();;
+        }
+        return instance;
     }
 
     public MapFragment() {
@@ -61,13 +63,14 @@ public class MapFragment extends Fragment {
         setUpMapIfNeeded();
         return rootView;
     }
-
+/*
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
     }
+    */
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     @Override
@@ -102,7 +105,7 @@ public class MapFragment extends Fragment {
                     .tiltGesturesEnabled(true);
             SupportMapFragment mMapFrag = SupportMapFragment.newInstance(options);
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.map_container, mMapFrag,"mapfragment");
+            fragmentTransaction.replace(R.id.map_container, mMapFrag, "mapfragment");
             fragmentTransaction.commit();
             mMapFrag.getMapAsync(new OnMapReadyCallback() {
                 public void onMapReady(GoogleMap googleMap) {
@@ -111,6 +114,12 @@ public class MapFragment extends Fragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mMap = null;
     }
 
     /**
@@ -125,9 +134,17 @@ public class MapFragment extends Fragment {
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
-                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),6)));
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),9)));
+                mMap.setOnMyLocationChangeListener (null);
             }
         });
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        CrowdReportApplication.getInstance().refreshItemsFromTable();
+        for(Issue i : CrowdReportApplication.mList){
+            if(i.getLon() != null && i.getLat() != null){
+                mMap.addMarker(new MarkerOptions().position(new LatLng(i.getLat(), i.getLon())).title(i.getCategory()).snippet(i.getDescription()));
+            }
+
+        }
+
     }
 }

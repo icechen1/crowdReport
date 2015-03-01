@@ -22,4 +22,14 @@
     <string name="action_done">Done</string>
     <string name="action_rot">Rotate</string>
     <string name="map_dialog">Choose location</string>
+    <string name="pick_category">Select categories</string>
+    <string name="title_activity_login">Login</string>
+    <string name="login_msg">Logging you in...</string>
+    <string name="action_submit">Submit</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    <string name="title_listing">All Submissions</string>
+    <string name="hint_description">Describe the issue...</string>
+    <string name="title_my_listing">My Submissions</string>
+    <string name="title_activity_detail">Details</string>
 </resources>
