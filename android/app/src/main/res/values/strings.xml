@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">CrowdReport</string>
+    <string name="app_name">CommuniVoice</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_main">CrowdReport</string>
+    <string name="title_activity_main">CommuniVoice</string>
 
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
